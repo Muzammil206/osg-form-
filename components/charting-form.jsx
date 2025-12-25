@@ -16,6 +16,8 @@ export function ChartingForm({ data, onChange }) {
     return date.toLocaleDateString("en-US", options).toUpperCase()
   }
 
+  const surveyors = ["Surv. Mahmud Mohammed Ibrahim", "Surv. Timothy O. Oyebanji", "Surv. Ibrahim Ismail"]
+
   return (
     <div className="space-y-8">
       {/* Header Section */}
@@ -108,72 +110,115 @@ export function ChartingForm({ data, onChange }) {
             />
           </div>
 
-          {/* UTM Coordinates */}
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-4">UTM Coordinates (Beacon)</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="beaconE" className="text-gray-700">
-                  E (mE)
-                </Label>
-                <Input
-                  id="beaconE"
-                  type="number"
-                  step="0.001"
-                  value={data.beaconE}
-                  onChange={(e) => handleChange("beaconE", e.target.value)}
-                  placeholder="695060.168"
-                  className="mt-2"
-                />
-              </div>
-              <div>
-                <Label htmlFor="beaconN" className="text-gray-700">
-                  N (mN)
-                </Label>
-                <Input
-                  id="beaconN"
-                  type="number"
-                  step="0.001"
-                  value={data.beaconN}
-                  onChange={(e) => handleChange("beaconN", e.target.value)}
-                  placeholder="912149.252"
-                  className="mt-2"
-                />
-              </div>
+          {/* Charting Information Table */}
+          <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+            <h4 className="font-bold text-gray-900 mb-4 text-sm">Charting Information</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr>
+                    <th className="border border-gray-300 bg-blue-100 px-4 py-2 text-left font-bold text-gray-800">
+                      Type
+                    </th>
+                    <th className="border border-gray-300 bg-blue-100 px-4 py-2 text-left font-bold text-gray-800">
+                      E (mE)
+                    </th>
+                    <th className="border border-gray-300 bg-blue-100 px-4 py-2 text-left font-bold text-gray-800">
+                      N (mN)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-white hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold text-gray-700">Beacon (U.T.M)</td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <span className="text-gray-600">{data.beaconE || "—"}</span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <span className="text-gray-600">{data.beaconN || "—"}</span>
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50 hover:bg-gray-100">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold text-gray-700">Township</td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <span className="text-gray-600">{data.townshipE || "—"}</span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <span className="text-gray-600">{data.townshipN || "—"}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </div>
 
-          {/* Township Coordinates */}
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-4">Township Coordinates</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Coordinates Input Section */}
+            <div className="mt-6 space-y-4">
               <div>
-                <Label htmlFor="townshipE" className="text-gray-700">
-                  E (mE)
-                </Label>
-                <Input
-                  id="townshipE"
-                  type="number"
-                  step="0.001"
-                  value={data.townshipE}
-                  onChange={(e) => handleChange("townshipE", e.target.value)}
-                  placeholder="10968.269"
-                  className="mt-2"
-                />
+                <h5 className="font-semibold text-gray-700 mb-3 text-sm">UTM Coordinates (Beacon)</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="beaconE" className="text-gray-700 text-sm">
+                      E (mE)
+                    </Label>
+                    <Input
+                      id="beaconE"
+                      type="number"
+                      step="0.001"
+                      value={data.beaconE}
+                      onChange={(e) => handleChange("beaconE", e.target.value)}
+                      placeholder="695060.168"
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="beaconN" className="text-gray-700 text-sm">
+                      N (mN)
+                    </Label>
+                    <Input
+                      id="beaconN"
+                      type="number"
+                      step="0.001"
+                      value={data.beaconN}
+                      onChange={(e) => handleChange("beaconN", e.target.value)}
+                      placeholder="912149.252"
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
               </div>
+
               <div>
-                <Label htmlFor="townshipN" className="text-gray-700">
-                  N (mN)
-                </Label>
-                <Input
-                  id="townshipN"
-                  type="number"
-                  step="0.001"
-                  value={data.townshipN}
-                  onChange={(e) => handleChange("townshipN", e.target.value)}
-                  placeholder="15486.737"
-                  className="mt-2"
-                />
+                <h5 className="font-semibold text-gray-700 mb-3 text-sm">Township Coordinates</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="townshipE" className="text-gray-700 text-sm">
+                      E (mE)
+                    </Label>
+                    <Input
+                      id="townshipE"
+                      type="number"
+                      step="0.001"
+                      value={data.townshipE}
+                      onChange={(e) => handleChange("townshipE", e.target.value)}
+                      placeholder="10968.269"
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="townshipN" className="text-gray-700 text-sm">
+                      N (mN)
+                    </Label>
+                    <Input
+                      id="townshipN"
+                      type="number"
+                      step="0.001"
+                      value={data.townshipN}
+                      onChange={(e) => handleChange("townshipN", e.target.value)}
+                      placeholder="15486.737"
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -257,13 +302,18 @@ export function ChartingForm({ data, onChange }) {
             <Label htmlFor="surveyor" className="text-gray-700 font-semibold">
               Surveyor Name
             </Label>
-            <Input
-              id="surveyor"
-              value={data.surveyor}
-              onChange={(e) => handleChange("surveyor", e.target.value)}
-              placeholder="e.g., Surv. A. O. Oyetoke"
-              className="mt-2"
-            />
+            <Select value={data.surveyor} onValueChange={(value) => handleChange("surveyor", value)}>
+              <SelectTrigger id="surveyor" className="mt-2">
+                <SelectValue placeholder="Select a surveyor" />
+              </SelectTrigger>
+              <SelectContent>
+                {surveyors.map((surveyor) => (
+                  <SelectItem key={surveyor} value={surveyor}>
+                    {surveyor}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <Label htmlFor="dateSigned" className="text-gray-700 font-semibold">

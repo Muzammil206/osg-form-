@@ -44,23 +44,18 @@ export default function Home() {
       })
 
       const pageWidth = pdf.internal.pageSize.getWidth()
-      let yPosition = 15
+      const pageHeight = pdf.internal.pageSize.getHeight()
+      let yPosition = 12
 
-      // Header Section
-      pdf.setFont("helvetica", "bold")
-      pdf.setFontSize(14)
-      pdf.text("kw-Gis", pageWidth / 2, yPosition, { align: "center" })
-      yPosition += 6
+     
 
-      pdf.setFontSize(11)
-      pdf.text("Kwara State Geographic Information Service", pageWidth / 2, yPosition, { align: "center" })
-      yPosition += 5
+      // Horizontal divider
+      pdf.setDrawColor(30, 90, 160)
+      pdf.setLineWidth(1)
+      pdf.line(15, yPosition, pageWidth - 15, yPosition)
+      yPosition += 8
 
-      pdf.setFontSize(9)
-      pdf.text("OFFICE OF THE SURVEYOR GENERAL / DIRECTORATE OF SURVEY", pageWidth / 2, yPosition, { align: "center" })
-      yPosition += 10
-
-      // Reference and Recipient Info
+      // Reference and Recipient
       pdf.setFont("helvetica", "normal")
       pdf.setFontSize(9)
       pdf.text(`REF: ${formData.referenceNumber}`, 15, yPosition)
@@ -76,133 +71,245 @@ export default function Home() {
       pdf.text("Dear Sir/Ma", 15, yPosition)
       yPosition += 8
 
-      pdf.setFont("helvetica", "normal")
-      pdf.setFontSize(9)
-      pdf.text(formData.date, pageWidth - 15, yPosition, { align: "right" })
-      yPosition += 12
+      // Date on right
+      const formattedDate = formData.date
+        ? new Date(formData.date)
+            .toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+            .toUpperCase()
+        : ""
+      pdf.text(formattedDate, pageWidth - 15, yPosition - 6, { align: "right" })
+      yPosition += 6
 
       // Title
       pdf.setFont("helvetica", "bold")
       pdf.setFontSize(11)
-      pdf.text("CHARTING INFORMATION REPORT", pageWidth / 2, yPosition, { align: "center" })
+      pdf.text(`CHARTING INFORMATION REPORT SURVEY PLAN NUMBER  ${formData.surveyPlanNumber}` , pageWidth / 2, yPosition, { align: "center" })
       yPosition += 10
 
-      // Application Details Text
-      pdf.setFont("helvetica", "normal")
-      pdf.setFontSize(9)
-      const surveyText = `With reference to your application on the above subject matter dated ${formData.applicationDate} with the following details.`
+      
+      // Application text
+      const appDate = formData.applicationDate
+        ? new Date(formData.applicationDate)
+            .toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+            .toUpperCase()
+        : ""
+      const surveyText = `With reference to your application on the above subject matter dated ${appDate} with the following details.`
       const splitText = pdf.splitTextToSize(surveyText, pageWidth - 30)
       pdf.text(splitText, 15, yPosition)
-      yPosition += splitText.length * 4 + 5
+      yPosition += splitText.length * 4 + 8
 
-      // Details Table
-      const detailsData = [
-        ["Beacon", formData.beacon, "U.T.M", `${formData.beaconE}mE`, `${formData.beaconN}mN`],
-        ["TOWNSHIP", `${formData.townshipE}mE`, `${formData.townshipN}mN`, "", ""],
-        ["Location", `At ${formData.area}, ${formData.irepodun} ${formData.lga} ${formData.state}`, "", "", ""],
-        ["Size", `${formData.size} Hectares`, "", "", ""],
-        ["Surveyor", formData.surveyor, "Date Signed", formData.dateSigned, ""],
-      ]
-
-      pdf.setFont("helvetica", "normal")
-      pdf.setFontSize(8)
-      detailsData.forEach((row) => {
-        let xPos = 15
-        row.forEach((cell, idx) => {
-          if (cell) {
-            if (idx === 0 || idx === 2) {
-              pdf.setFont("helvetica", "bold")
-            } else {
-              pdf.setFont("helvetica", "normal")
-            }
-            pdf.text(cell, xPos, yPosition)
-          }
-          xPos += idx === 0 ? 25 : idx === 2 ? 30 : 25
-        })
-        yPosition += 5
-      })
-
-      yPosition += 8
-
-      // Status Report Section
-      pdf.setFont("helvetica", "normal")
-      pdf.setFontSize(9)
-      pdf.text("The said plan has been Charted and reported as follows", 15, yPosition)
-      yPosition += 8
-
-      // Status Table
-      const statusTableData = [
-        [
-          { content: "S/N", styles: { fontStyle: "bold", halign: "center", fillColor: [220, 220, 220] } },
-          { content: "DESCRIPTION", styles: { fontStyle: "bold", halign: "left", fillColor: [220, 220, 220] } },
-          { content: "Status", styles: { fontStyle: "bold", halign: "center", fillColor: [220, 220, 220] } },
-          { content: "Remarks", styles: { fontStyle: "bold", halign: "left", fillColor: [220, 220, 220] } },
-        ],
-        ["1", "Land falls within Government Acquisition", formData.landAcquisition, formData.landAcquisitionRemarks],
-        ["2", "Land falls within Existing Title", formData.existingTitle, formData.existingTitleRemarks],
-        ["3", "The Land is FREE from any Acquisition", formData.freeFromAcquisition, formData.freeAcquisitionRemarks],
-      ]
-
-      const pageHeight = pdf.internal.pageSize.getHeight()
-      const bottomMargin = 30
-
-      pdf.setFontSize(8)
-      pdf.setTextColor(0, 0, 0)
-
-      // Manual table drawing with borders
       const tableStartY = yPosition
-      const colWidths = [15, 80, 30, 40]
+      const tableX = 15
+      const tableWidth = pageWidth - 30
       const rowHeight = 7
 
-      // Draw table header
-      pdf.setFillColor(220, 220, 220)
-      pdf.setFont("helvetica", "bold")
-      pdf.rect(15, tableStartY, 165, rowHeight, "F")
-      pdf.text("S/N", 17, tableStartY + 4)
-      pdf.text("DESCRIPTION", 35, tableStartY + 4)
-      pdf.text("Status", 120, tableStartY + 4)
-      pdf.text("Remarks", 155, tableStartY + 4)
+      // Column widths
+      const col1Width = 40
+      const col2Width = 40
+      const col3Width = 40
+      const col4Width = tableWidth - col1Width - col2Width - col3Width
 
+      // Table header background
+      pdf.setFillColor(30, 90, 160)
+      pdf.setTextColor(255, 255, 255)
+      pdf.rect(tableX, tableStartY, tableWidth, rowHeight, "F")
+
+      // Header text
+      pdf.setFont("helvetica", "bold")
+      pdf.setFontSize(8)
+      pdf.text("Type", tableX + 2, tableStartY + 4.5)
+      pdf.text("Easting (mE)", tableX + col1Width + 2, tableStartY + 4.5)
+      pdf.text("Northing (mN)", tableX + col1Width + col2Width + 2, tableStartY + 4.5)
+      pdf.text("Reference", tableX + col1Width + col2Width + col3Width + 2, tableStartY + 4.5)
+
+      // Header borders
       pdf.setDrawColor(0, 0, 0)
       pdf.setLineWidth(0.5)
-      pdf.rect(15, tableStartY, 165, rowHeight)
-      pdf.line(30, tableStartY, 30, tableStartY + rowHeight)
-      pdf.line(115, tableStartY, 115, tableStartY + rowHeight)
-      pdf.line(150, tableStartY, 150, tableStartY + rowHeight)
+      pdf.rect(tableX, tableStartY, tableWidth, rowHeight)
+      let borderX = tableX + col1Width
+      pdf.line(borderX, tableStartY, borderX, tableStartY + rowHeight)
+      borderX += col2Width
+      pdf.line(borderX, tableStartY, borderX, tableStartY + rowHeight)
+      borderX += col3Width
+      pdf.line(borderX, tableStartY, borderX, tableStartY + rowHeight)
 
       yPosition = tableStartY + rowHeight
 
-      // Draw table rows
+      // Table data rows
+      pdf.setTextColor(0, 0, 0) // All table data text now in black instead of white
       pdf.setFont("helvetica", "normal")
+      pdf.setFontSize(8)
+
       const tableRows = [
-        ["1", "Land falls within Government Acquisition", formData.landAcquisition, formData.landAcquisitionRemarks],
-        ["2", "Land falls within Existing Title", formData.existingTitle, formData.existingTitleRemarks],
-        ["3", "The Land is FREE from any Acquisition", formData.freeFromAcquisition, formData.freeAcquisitionRemarks],
+        ["Beacon", formData.beaconE || "-", formData.beaconN || "-", formData.beacon || "-"],
+        ["Township", formData.townshipE || "-", formData.townshipN || "-", "Local"],
       ]
 
-      tableRows.forEach((row) => {
-        pdf.rect(15, yPosition, 165, rowHeight)
-        pdf.line(30, yPosition, 30, yPosition + rowHeight)
-        pdf.line(115, yPosition, 115, yPosition + rowHeight)
-        pdf.line(150, yPosition, 150, yPosition + rowHeight)
+      tableRows.forEach((row, rowIndex) => {
+        // Alternate row background
+        if (rowIndex % 2 === 0) {
+          pdf.setFillColor(240, 245, 250)
+          pdf.rect(tableX, yPosition, tableWidth, rowHeight, "F")
+        }
 
-        pdf.text(row[0], 17, yPosition + 4)
-        const descLines = pdf.splitTextToSize(row[1], 80)
-        pdf.text(descLines[0], 35, yPosition + 4)
+        // Row borders
+        pdf.setDrawColor(0, 0, 0)
+        pdf.rect(tableX, yPosition, tableWidth, rowHeight)
+        borderX = tableX + col1Width
+        pdf.line(borderX, yPosition, borderX, yPosition + rowHeight)
+        borderX += col2Width
+        pdf.line(borderX, yPosition, borderX, yPosition + rowHeight)
+        borderX += col3Width
+        pdf.line(borderX, yPosition, borderX, yPosition + rowHeight)
+
+        // Cell content
         pdf.setFont("helvetica", "bold")
-        pdf.text(row[2], 120, yPosition + 4)
+        pdf.text(row[0], tableX + 2, yPosition + 4.5)
         pdf.setFont("helvetica", "normal")
-        const remarksLines = pdf.splitTextToSize(row[3] || "", 35)
-        pdf.text(remarksLines[0] || "", 155, yPosition + 4)
+        pdf.text(String(row[1]), tableX + col1Width + 2, yPosition + 4.5)
+        pdf.text(String(row[2]), tableX + col1Width + col2Width + 2, yPosition + 4.5)
+        pdf.text(String(row[3]), tableX + col1Width + col2Width + col3Width + 2, yPosition + 4.5)
 
         yPosition += rowHeight
       })
 
       yPosition += 8
 
-      // Footer Notes
+      pdf.setFont("helvetica", "bold")
+      pdf.setFontSize(9)
+      const locationX = 15
+      const valueX = 70
+
+      pdf.text("Location", locationX, yPosition)
+      pdf.setFont("helvetica", "normal")
+      pdf.text(
+        `${formData.area || "-"}, ${formData.irepodun || "-"} ${formData.lga || "-"} ${formData.state || "-"}`,
+        valueX,
+        yPosition,
+      )
+      yPosition += 5
+
+      pdf.setFont("helvetica", "bold")
+      pdf.text("Size", locationX, yPosition)
+      pdf.setFont("helvetica", "normal")
+      pdf.text(`${formData.size || "-"} Hectares`, valueX, yPosition)
+      yPosition += 5
+
+      pdf.setFont("helvetica", "bold")
+      pdf.text("Surveyor", locationX, yPosition)
+      pdf.setFont("helvetica", "normal")
+      pdf.text(formData.surveyor || "-", valueX, yPosition)
+      yPosition += 5
+
+      pdf.setFont("helvetica", "bold")
+      pdf.text("Date Signed", locationX, yPosition)
+      pdf.setFont("helvetica", "normal")
+      const dateSigned = formData.dateSigned
+        ? new Date(formData.dateSigned)
+            .toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+            .toUpperCase()
+        : "-"
+      pdf.text(dateSigned, valueX, yPosition)
+      yPosition += 10
+
+      pdf.setFont("helvetica", "normal")
+      pdf.setFontSize(9)
+      pdf.setTextColor(0, 0, 0) // Survey text now in black
+      pdf.text("The said plan has been Charted and reported as follows", 15, yPosition)
+      yPosition += 8
+
+      const statusTableStartY = yPosition
+      const statusRowHeight = 7
+      const sn_Width = 12
+      const desc_Width = 90
+      const status_Width = 30
+      const remarks_Width = tableWidth - sn_Width - desc_Width - status_Width
+
+      // Status table header
+      pdf.setFillColor(30, 90, 160)
+      pdf.setTextColor(255, 255, 255)
+      pdf.rect(15, statusTableStartY, tableWidth, statusRowHeight, "F")
+
+      pdf.setFont("helvetica", "bold")
+      pdf.setFontSize(8)
+      pdf.text("S/N", 16, statusTableStartY + 4)
+      pdf.text("DESCRIPTION", 30, statusTableStartY + 4)
+      pdf.text("Status", 125, statusTableStartY + 4)
+      pdf.text("Remarks", 160, statusTableStartY + 4)
+
+      // Status header borders
+      pdf.setDrawColor(0, 0, 0)
+      pdf.rect(15, statusTableStartY, tableWidth, statusRowHeight)
+      pdf.line(27, statusTableStartY, 27, statusTableStartY + statusRowHeight)
+      pdf.line(120, statusTableStartY, 120, statusTableStartY + statusRowHeight)
+      pdf.line(150, statusTableStartY, 150, statusTableStartY + statusRowHeight)
+
+      yPosition = statusTableStartY + statusRowHeight
+
+      // Status rows
       pdf.setFont("helvetica", "normal")
       pdf.setFontSize(8)
+      pdf.setTextColor(0, 0, 0) // Status rows now with black text
+
+      const statusRows = [
+        [
+          "1",
+          "Land falls within Government Acquisition",
+          formData.landAcquisition || "-",
+          formData.landAcquisitionRemarks || "-",
+        ],
+        ["2", "Land falls within Existing Title", formData.existingTitle || "-", formData.existingTitleRemarks || "-"],
+        [
+          "3",
+          "The Land is FREE from any Acquisition",
+          formData.freeFromAcquisition || "-",
+          formData.freeAcquisitionRemarks || "-",
+        ],
+      ]
+
+      statusRows.forEach((row, rowIndex) => {
+        // Alternate backgrounds
+        if (rowIndex % 2 === 0) {
+          pdf.setFillColor(240, 245, 250)
+          pdf.rect(15, yPosition, tableWidth, statusRowHeight, "F")
+        }
+
+        // Row borders
+        pdf.setDrawColor(0, 0, 0)
+        pdf.rect(15, yPosition, tableWidth, statusRowHeight)
+        pdf.line(27, yPosition, 27, yPosition + statusRowHeight)
+        pdf.line(120, yPosition, 120, yPosition + statusRowHeight)
+        pdf.line(150, yPosition, 150, yPosition + statusRowHeight)
+
+        // Cell content
+        pdf.text(row[0], 17, yPosition + 4)
+        pdf.text(row[1], 32, yPosition + 4)
+        pdf.setFont("helvetica", "bold")
+        pdf.text(row[2], 122, yPosition + 4)
+        pdf.setFont("helvetica", "normal")
+        const remarksText = row[3] || "-"
+        pdf.text(remarksText.substring(0, 25), 152, yPosition + 4)
+
+        yPosition += statusRowHeight
+      })
+
+      yPosition += 8
+
+      pdf.setFont("helvetica", "normal")
+      pdf.setFontSize(8)
+      pdf.setTextColor(0, 0, 0) // Footer and notes now in black text
       const footerText =
         "To advance your Certificate of Occupancy (CofO) application, you must provide a Lodgment Certificate. Please arrange for your Surveyor to submit the Record Copy to obtain this required document."
       const footerLines = pdf.splitTextToSize(footerText, pageWidth - 30)
@@ -210,8 +317,9 @@ export default function Home() {
       yPosition += footerLines.length * 3 + 4
 
       pdf.setFont("helvetica", "bold")
+      pdf.setFontSize(8)
       pdf.text("Note:", 15, yPosition)
-      yPosition += 4
+      yPosition += 3
 
       pdf.setFont("helvetica", "normal")
       const notes = [
@@ -230,24 +338,23 @@ export default function Home() {
 
       yPosition += 4
 
-      // Contact Information
-      pdf.setFont("helvetica", "bold")
-      pdf.setFontSize(8)
-      pdf.text("Commissioner's Lodge Way, GRA", 15, yPosition)
-      yPosition += 4
-      pdf.setFont("helvetica", "normal")
-      pdf.text("PMB 1425, Ilorin, Kwara State.", 15, yPosition)
-      yPosition += 4
-      pdf.text("KWGIS@Kwarastate.gov.ng", 15, yPosition)
-      yPosition += 4
-      pdf.text("09035551892", 15, yPosition)
+      // Contact information
+      // pdf.setFont("helvetica", "bold")
+      // pdf.setFontSize(8)
+      // pdf.text("Commissioner's Lodge Way, GRA", 15, yPosition)
+      // yPosition += 3
+      // pdf.setFont("helvetica", "normal")
+      // pdf.text("PMB 1425, Ilorin, Kwara State.", 15, yPosition)
+      // yPosition += 3
+      // pdf.text("KWGIS@Kwarastate.gov.ng", 15, yPosition)
+      // yPosition += 3
+      // pdf.text("09035551892", 15, yPosition)
 
-      // Generate filename with recipient name
+      // Generate filename
       const sanitizedName = formData.recipientName.replace(/\s+/g, "-").toUpperCase()
       const filename = `${sanitizedName}-Charting-Report.pdf`
 
       pdf.save(filename)
-      console.log(`[v0] PDF downloaded: ${filename}`)
     } catch (error) {
       console.error("[v0] PDF generation error:", error)
       alert("Error generating PDF. Please try again.")
