@@ -1,62 +1,76 @@
 export function ChartingReportPDF({ data }) {
   return (
-    <div className="font-serif text-sm leading-relaxed">
+    <div style={{ fontFamily: "serif", fontSize: "12px", lineHeight: "1.6", color: "#000" }}>
       {/* Header */}
-      <div className="text-center mb-6 border-b-2 border-gray-300 pb-4">
-        <div className="text-lg font-bold mb-2">kw-Gis</div>
-        <div className="text-sm font-bold mb-1">Kwara State Geographic Information Service</div>
-        <div className="text-xs font-bold">OFFICE OF THE SURVEYOR GENERAL / DIRECTORATE OF SURVEY</div>
+      <div style={{ textAlign: "center", marginBottom: "24px", borderBottom: "2px solid #333", paddingBottom: "16px" }}>
+        <div style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "8px" }}>kw-Gis</div>
+        <div style={{ fontSize: "12px", fontWeight: "bold", marginBottom: "4px" }}>
+          Kwara State Geographic Information Service
+        </div>
+        <div style={{ fontSize: "10px", fontWeight: "bold" }}>
+          OFFICE OF THE SURVEYOR GENERAL / DIRECTORATE OF SURVEY
+        </div>
       </div>
 
       {/* Reference and Recipient */}
-      <div className="mb-4">
-        <div className="text-xs mb-2">
-          <span className="font-bold">REF:</span> {data.referenceNumber}
+      <div style={{ marginBottom: "16px" }}>
+        <div style={{ fontSize: "10px", marginBottom: "8px" }}>
+          <span style={{ fontWeight: "bold" }}>REF:</span> {data.referenceNumber}
         </div>
-        <div className="text-sm font-bold mb-2">{data.recipientName}</div>
-        <div className="text-xs mb-4">Dear Sir/Ma</div>
-        <div className="text-xs mb-4 text-right">{data.date}</div>
+        <div style={{ fontSize: "12px", fontWeight: "bold", marginBottom: "8px" }}>{data.recipientName}</div>
+        <div style={{ fontSize: "10px", marginBottom: "16px" }}>Dear Sir/Ma</div>
+        <div style={{ fontSize: "10px", marginBottom: "16px", textAlign: "right" }}>{data.date}</div>
       </div>
 
       {/* Title */}
-      <div className="text-center font-bold text-sm mb-6 underline">CHARTING INFORMATION REPORT</div>
+      <div
+        style={{
+          textAlign: "center",
+          fontWeight: "bold",
+          fontSize: "12px",
+          marginBottom: "24px",
+          textDecoration: "underline",
+        }}
+      >
+        CHARTING INFORMATION REPORT
+      </div>
 
       {/* Application Details */}
-      <div className="mb-6">
-        <p className="text-xs mb-3">
+      <div style={{ marginBottom: "24px" }}>
+        <p style={{ fontSize: "10px", marginBottom: "12px" }}>
           With reference to your application on the above subject matter dated {data.applicationDate} with the following
           details.
         </p>
 
-        <table className="w-full text-xs mb-4">
+        <table style={{ width: "100%", fontSize: "10px", marginBottom: "16px", borderCollapse: "collapse" }}>
           <tbody>
             <tr>
-              <td className="font-bold py-1">Beacon</td>
-              <td className="py-1">{data.beacon}</td>
-              <td className="font-bold py-1 pl-4">U.T.M</td>
-              <td className="py-1">{data.beaconE}mE</td>
-              <td className="py-1">{data.beaconN}mN</td>
+              <td style={{ fontWeight: "bold", padding: "4px 0" }}>Beacon</td>
+              <td style={{ padding: "4px 0" }}>{data.beacon}</td>
+              <td style={{ fontWeight: "bold", padding: "4px 0 4px 16px" }}>U.T.M</td>
+              <td style={{ padding: "4px 0" }}>{data.beaconE}mE</td>
+              <td style={{ padding: "4px 0" }}>{data.beaconN}mN</td>
             </tr>
             <tr>
-              <td className="font-bold py-1">TOWNSHIP</td>
-              <td className="py-1">{data.townshipE}mE</td>
-              <td className="py-1">{data.townshipN}mN</td>
+              <td style={{ fontWeight: "bold", padding: "4px 0" }}>TOWNSHIP</td>
+              <td style={{ padding: "4px 0" }}>{data.townshipE}mE</td>
+              <td style={{ padding: "4px 0" }}>{data.townshipN}mN</td>
             </tr>
             <tr>
-              <td className="font-bold py-1">Location</td>
-              <td colSpan={4} className="py-1">
+              <td style={{ fontWeight: "bold", padding: "4px 0" }}>Location</td>
+              <td colSpan={4} style={{ padding: "4px 0" }}>
                 At {data.area}, {data.irepodun} {data.lga} {data.state}
               </td>
             </tr>
             <tr>
-              <td className="font-bold py-1">Size</td>
-              <td className="py-1">{data.size} Hectares</td>
+              <td style={{ fontWeight: "bold", padding: "4px 0" }}>Size</td>
+              <td style={{ padding: "4px 0" }}>{data.size} Hectares</td>
             </tr>
             <tr>
-              <td className="font-bold py-1">Surveyor</td>
-              <td className="py-1">{data.surveyor}</td>
-              <td className="font-bold py-1 pl-4">Date Signed</td>
-              <td colSpan={2} className="py-1">
+              <td style={{ fontWeight: "bold", padding: "4px 0" }}>Surveyor</td>
+              <td style={{ padding: "4px 0" }}>{data.surveyor}</td>
+              <td style={{ fontWeight: "bold", padding: "4px 0 4px 16px" }}>Date Signed</td>
+              <td colSpan={2} style={{ padding: "4px 0" }}>
                 {data.dateSigned}
               </td>
             </tr>
@@ -65,51 +79,67 @@ export function ChartingReportPDF({ data }) {
       </div>
 
       {/* Status Report */}
-      <div className="mb-6">
-        <p className="text-xs mb-4 font-semibold">The said plan has been Charted and reported as follows</p>
+      <div style={{ marginBottom: "24px" }}>
+        <p style={{ fontSize: "10px", marginBottom: "16px", fontWeight: "600" }}>
+          The said plan has been Charted and reported as follows
+        </p>
 
-        <table className="w-full text-xs border border-gray-400">
+        <table style={{ width: "100%", fontSize: "10px", border: "1px solid #000", borderCollapse: "collapse" }}>
           <thead>
-            <tr className="border-b border-gray-400">
-              <th className="border-r border-gray-400 p-2 text-left font-bold">S/N</th>
-              <th className="border-r border-gray-400 p-2 text-left font-bold">DESCRIPTION</th>
-              <th className="border-r border-gray-400 p-2 text-left font-bold">Status</th>
-              <th className="p-2 text-left font-bold">Remarks</th>
+            <tr style={{ borderBottom: "1px solid #000" }}>
+              <th style={{ borderRight: "1px solid #000", padding: "8px", textAlign: "left", fontWeight: "bold" }}>
+                S/N
+              </th>
+              <th style={{ borderRight: "1px solid #000", padding: "8px", textAlign: "left", fontWeight: "bold" }}>
+                DESCRIPTION
+              </th>
+              <th style={{ borderRight: "1px solid #000", padding: "8px", textAlign: "left", fontWeight: "bold" }}>
+                Status
+              </th>
+              <th style={{ padding: "8px", textAlign: "left", fontWeight: "bold" }}>Remarks</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-400">
-              <td className="border-r border-gray-400 p-2">1</td>
-              <td className="border-r border-gray-400 p-2">Land falls within Government Acquisition</td>
-              <td className="border-r border-gray-400 p-2 font-bold">{data.landAcquisition}</td>
-              <td className="p-2">{data.landAcquisitionRemarks}</td>
+            <tr style={{ borderBottom: "1px solid #000" }}>
+              <td style={{ borderRight: "1px solid #000", padding: "8px" }}>1</td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px" }}>
+                Land falls within Government Acquisition
+              </td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px", fontWeight: "bold" }}>
+                {data.landAcquisition}
+              </td>
+              <td style={{ padding: "8px" }}>{data.landAcquisitionRemarks}</td>
             </tr>
-            <tr className="border-b border-gray-400">
-              <td className="border-r border-gray-400 p-2">2</td>
-              <td className="border-r border-gray-400 p-2">Land falls within Existing Title</td>
-              <td className="border-r border-gray-400 p-2 font-bold">{data.existingTitle}</td>
-              <td className="p-2">{data.existingTitleRemarks}</td>
+            <tr style={{ borderBottom: "1px solid #000" }}>
+              <td style={{ borderRight: "1px solid #000", padding: "8px" }}>2</td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px" }}>Land falls within Existing Title</td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px", fontWeight: "bold" }}>
+                {data.existingTitle}
+              </td>
+              <td style={{ padding: "8px" }}>{data.existingTitleRemarks}</td>
             </tr>
             <tr>
-              <td className="border-r border-gray-400 p-2">3</td>
-              <td className="border-r border-gray-400 p-2">The Land is FREE from any Acquisition</td>
-              <td className="border-r border-gray-400 p-2 font-bold">{data.freeFromAcquisition}</td>
-              <td className="p-2">{data.freeAcquisitionRemarks}</td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px" }}>3</td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px" }}>The Land is FREE from any Acquisition</td>
+              <td style={{ borderRight: "1px solid #000", padding: "8px", fontWeight: "bold" }}>
+                {data.freeFromAcquisition}
+              </td>
+              <td style={{ padding: "8px" }}>{data.freeAcquisitionRemarks}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Footer Notes */}
-      <div className="mt-8 text-xs">
-        <p className="mb-4">
+      <div style={{ marginTop: "32px", fontSize: "10px" }}>
+        <p style={{ marginBottom: "16px" }}>
           To advance your Certificate of Occupancy (CofO) application, you must provide a Lodgment Certificate. Please
           arrange for your Surveyor to submit the Record Copy to obtain this required document.
         </p>
 
-        <div className="mb-6">
-          <p className="font-bold mb-2">Note:</p>
-          <ol className="list-decimal list-inside space-y-1 text-xs ml-2">
+        <div style={{ marginBottom: "24px" }}>
+          <p style={{ fontWeight: "bold", marginBottom: "8px" }}>Note:</p>
+          <ol style={{ listStyleType: "decimal", marginLeft: "16px", lineHeight: "1.8" }}>
             <li>This Information Report does not confer Title on this Land.</li>
             <li>This information is in order, provided the quoted coordinates on the survey plan are correct</li>
             <li>This Information can only be used for processing of Title in the name of the addressee</li>
@@ -119,11 +149,11 @@ export function ChartingReportPDF({ data }) {
         </div>
 
         {/* Contact Information */}
-        <div className="border-t border-gray-300 pt-4">
-          <p className="font-bold">Commissioner's Lodge Way, GRA</p>
+        <div style={{ borderTop: "1px solid #ccc", paddingTop: "16px" }}>
+          <p style={{ fontWeight: "bold" }}>Commissioner's Lodge Way, GRA</p>
           <p>PMB 1425, Ilorin, Kwara State.</p>
-          <p>📧 KWGIS@Kwarastate.gov.ng</p>
-          <p>📞 09035551892</p>
+          <p>KWGIS@Kwarastate.gov.ng</p>
+          <p>09035551892</p>
         </div>
       </div>
     </div>
