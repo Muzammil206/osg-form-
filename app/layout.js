@@ -8,7 +8,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata = {
   title: "Charting Report Generator",
   description: "Generate and download Charting Information Reports as PDF",
-  generator: "v0.app",
+
   icons: {
     icon: [
       {
